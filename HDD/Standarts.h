@@ -4,12 +4,7 @@ class Interface {
 public:
 	int support[16];
 
-	virtual void setSupported(unsigned short supported) = 0;
-};
-
-class ATA : public Interface {
-public:
-	void setSupported(unsigned short supported) override {
+	void setSupported(unsigned short supported) {
 		int i = 16;
 
 		while (i--) {
@@ -19,29 +14,11 @@ public:
 	}
 };
 
-class DMA : public Interface {
-public:
-	void setSupported(unsigned short supported) override {
-		int i = 16;
+class ATA : public Interface { };
 
-		while (i--) {
-			support[i] = supported & 32768 ? 1 : 0;
-			supported <<= 1;
-		}
-	}
-};
+class DMA : public Interface { };
 
-class PIO : public Interface {
-public:
-	void setSupported(unsigned short supported) override {
-		int i = 16;
-
-		while (i--) {
-			support[i] = supported & 32768 ? 1 : 0;
-			supported <<= 1;
-		}
-	}
-};
+class PIO : public Interface { };
 
 class Standarts {
 public:
