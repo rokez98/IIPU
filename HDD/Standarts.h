@@ -37,7 +37,7 @@ public:
 		PTE.AtaFlags = ATA_FLAGS_DATA_IN;
 
 		IDEREGS *ideRegs = (IDEREGS *)PTE.CurrentTaskFile;
-		ideRegs->bCommandReg = 0xEC;
+		ideRegs->bCommandReg = 0xEC; // Identify device
 		DeviceIoControl(
 			diskHandle,
 			IOCTL_ATA_PASS_THROUGH,

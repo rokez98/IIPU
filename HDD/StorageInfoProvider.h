@@ -11,9 +11,9 @@ class StorageInfoProvider {
 public:
 	StorageInfoProvider() {
 		diskHandle = CreateFile(
-			"\\\\.\\PhysicalDrive0",		// File name
-			GENERIC_READ | GENERIC_WRITE,	// Access
-			FILE_SHARE_READ,				// Security attributes
+			"\\\\.\\PhysicalDrive0",		
+			GENERIC_READ | GENERIC_WRITE,	
+			FILE_SHARE_READ,				
 			NULL,
 			OPEN_EXISTING,
 			NULL,
@@ -48,6 +48,7 @@ public:
 		drive.BusType = (char*)busType[deviceDescriptor->BusType];
 		drive.SerialNumber = (char*)(deviceDescriptor)+deviceDescriptor->SerialNumberOffset;
 
+		drive.memory.CalcMemory(diskHandle);
 		drive.standarts.getSupportedInterfaces(diskHandle);
 
 		return drive;

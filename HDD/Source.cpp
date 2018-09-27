@@ -17,13 +17,7 @@ void ShowInfo(DiskDrive drive) {
 	cout << "Bus type:      " << drive.BusType << endl;
 	cout << "Serial number: " << drive.SerialNumber << endl;
 
-	cout << setw(15) << "Total space[Mb]" << setw(15) << "Free space[Mb]" << setw(15) << "Busy space[%]" << endl;
-
-	cout << setw(15) << drive.memory.totalDiskSpace;
-	cout << setw(15) << drive.memory.totalFreeSpace;
-	cout << setw(15) << std::setprecision(3) << 100.0 - (double)drive.memory.totalFreeSpace / (double)drive.memory.totalDiskSpace * 100;
-
-	cout << endl;
+	cout << "Total space[Mb]:  " << drive.memory.totalDiskSpace << endl;
 
 	cout << "ATA Support:   ";
 	for (int i = 8; i >= 4; i--) {

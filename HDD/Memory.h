@@ -4,33 +4,37 @@
 
 class Memory {
 public:
-	int totalDiskSpace;
-	int totalFreeSpace;
+	ULONGLONG totalDiskSpace;
+	ULONGLONG totalFreeSpace;
 
-	Memory() {
-		_ULARGE_INTEGER totalDiskSpace, diskSpace;
-		_ULARGE_INTEGER totalFreeSpace, freeSpace;
-		
-		totalDiskSpace.QuadPart = totalFreeSpace.QuadPart = 0;
-
+	void CalcMemory(HANDLE diskHandle) {
 		unsigned long int logicalDrivesCount = GetLogicalDrives();
 
-		for (char var = 'A'; var < 'Z'; var++) {
-			if ((logicalDrivesCount >> var - 65) & 1) {
-				std::string path;
-				path = var;
-				path.append(":\\");
+		DISK_GEOMETRY diskGeometry = { 0 };
+		DWORD junk = 0;
 
-				if (GetDriveType(path.c_str()) == DRIVE_FIXED) {
-					GetDiskFreeSpaceEx(path.c_str(), 0, &diskSpace, &freeSpace);
-
-					totalDiskSpace.QuadPart += diskSpace.QuadPart / MEGABYTE;
-					totalFreeSpace.QuadPart += freeSpace.QuadPart / MEGABYTE;
-				}
-			}
+		if (!DeviceIoControl(
+			diskHandle,						// hDevice
+			IOCTL_DISK_GET_DRIVE_GEOMETRY,	// dwloControlCode
+			NULL,							// lplnBuffer 
+			0,								// nlnBufferSize
+			&diskGeometry,					// lpOutBuffer
+			sizeof(diskGeometry),			// nOutBufferSize
+			&junk,							// lpBytesReturned
+			(LPOVERLAPPED)NULL				// lpOverlapper
+		)) {
+			printf("%d", GetLastError());
+			CloseHandle(diskHandle);
+			exit(-1);
 		}
 
-		this->totalDiskSpace = totalDiskSpace.QuadPart;
-		this->totalFreeSpace = totalFreeSpace.QuadPart;
+		ULONGLONG DiskSize;
+
+		DiskSize = diskGeometry.Cylinders.QuadPart *
+			(ULONG)diskGeometry.TracksPerCylinder *
+			(ULONG)diskGeometry.SectorsPerTrack *
+			(ULONG)diskGeometry.BytesPerSector;
+
+		this->totalDiskSpace = DiskSize / MEGABYTE;
 	}
 };
