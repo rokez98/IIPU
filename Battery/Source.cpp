@@ -22,14 +22,12 @@ std::ostream& operator<<(std::ostream& lhs, ACLineStatus e) {
 }
 
 std::ostream& operator<<(std::ostream& lhs, ChargeLevelStatus e) {
-	switch (e) {
-	case High: lhs << "High"; break;
-	case Low: lhs << "Low"; break;
-	case Critical: lhs << "Critical"; break;
-	case Charging: lhs << "Charging"; break;
-	case NoSystemBattery: lhs << "No System Battery"; break;
-	case UnknownChargeLevelStatus: lhs << "Unknown"; break;
-	}
+	if (Critical & e) lhs << " Critical ";
+	if (Low & e) lhs << " Low ";
+	if (High & e) lhs << " High ";
+	if (Charging & e) lhs << " Charging "; 
+	if (NoSystemBattery & e)  lhs << "No System Battery";
+	if (UnknownChargeLevelStatus == e) lhs << "Unknown";
 	return lhs;
 }
 
@@ -52,7 +50,7 @@ std::ostream& operator<<(std::ostream& lhs, BatteryLifePercent e) {
 
 void ShowInfo(BatteryInfo battery) {
 	cout << "AC line status:          " << battery.ACStatus << endl;
-	cout << "Battery charge level:    " << battery.ChargeLevel << endl;
+	cout << "Battery charge level:   " << battery.ChargeLevel << endl;
 	cout << "Battery life percent:    " << battery.BatteryLifePercent << endl;
 	cout << "Battery saver status:    " << battery.BatterySaver << endl;
 }

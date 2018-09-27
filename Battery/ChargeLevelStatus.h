@@ -1,10 +1,10 @@
 #pragma once
 
 enum ChargeLevelStatus {
-	High = 1,
-	Low = 2,
-	Critical = 4,
-	Charging = 8,
+	High = 0x01,
+	Low = 0x02,
+	Critical = 0x04,
+	Charging = 0x08,
 	NoSystemBattery = 128,
 	UnknownChargeLevelStatus = 255
 };
